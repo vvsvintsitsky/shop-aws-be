@@ -1,3 +1,4 @@
+import { BASE_URL } from '@functions/consts';
 import { handlerPath } from '@libs/handler-resolver';
 
 export default {
@@ -6,7 +7,8 @@ export default {
     {
       http: {
         method: 'get',
-        path: 'products/{id}',
+        path: `${BASE_URL}/{id}`,
+        cors: true,
       },
     },
   ],

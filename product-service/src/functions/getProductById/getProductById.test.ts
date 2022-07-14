@@ -1,9 +1,10 @@
+import { mock, instance, when } from "ts-mockito";
+import { APIGatewayProxyResult, Context } from "aws-lambda";
+
 import { ValidatedAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { EntityNotFoundError } from "@repositories/errors/EntityNotFoundError";
 import { ProductRepository } from "@repositories/product/types";
-import { APIGatewayProxyResult, Context } from "aws-lambda";
 import { Product } from "src/types/Product";
-import { mock, instance, when } from "ts-mockito";
 
 import { createHandler } from "./handler";
 
