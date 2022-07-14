@@ -1,0 +1,13 @@
+{
+  "name": "shop-aws-be",
+  "version": "1.0.0",
+  "repository": "https://github.com/vvsvintsitsky/shop-aws-be.git",
+  "author": "Uladzislau_Svintsitski <uladzislau_svintsitski@epam.com>",
+  "license": "MIT",
+  "scripts": {
+    "serverless": "serverless"
+  },
+  "dependencies": {
+    "serverless": "^3.20.0"
+  }
+}
