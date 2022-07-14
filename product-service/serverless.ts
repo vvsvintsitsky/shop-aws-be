@@ -20,7 +20,6 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
   },
-  // import the function via paths
   functions: { getProductById, getProductsList },
   package: { individually: true },
   custom: {
