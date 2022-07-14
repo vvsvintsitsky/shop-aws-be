@@ -1,1 +1,1 @@
-export const BASE_URL = 'product'
+export const BASE_URL = 'products'
