@@ -7,14 +7,21 @@
     "test": "jest",
     "serverless": "serverless",
     "serverless:deploy": "serverless deploy",
-    "serverless:remove": "serverless remove"
+    "serverless:remove": "serverless remove",
+    "local:build": "docker-compose build",
+    "local:up": "docker-compose up",
+    "local:stop": "docker-compose stop",
+    "local:start": "docker-compose start",
+    "local:down": "docker-compose down",
+    "run:entry": "ts-node"
   },
   "engines": {
     "node": ">=14.15.0"
   },
   "dependencies": {
     "@middy/core": "^2.5.3",
-    "@middy/http-json-body-parser": "^2.5.3"
+    "@middy/http-json-body-parser": "^2.5.3",
+    "pg": "^8.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
@@ -24,6 +31,7 @@
     "@types/aws-lambda": "^8.10.71",
     "@types/jest": "^28.1.5",
     "@types/node": "^14.14.25",
+    "@types/pg": "^8.6.5",
     "babel-jest": "^28.1.3",
     "esbuild": "^0.14.11",
     "jest": "^28.1.3",
