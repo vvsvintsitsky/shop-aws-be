@@ -2,7 +2,7 @@ CREATE TABLE "products" (
 	"id" uuid NOT NULL,
 	"title" character varying(255) NOT NULL UNIQUE,
 	"description" character varying(255) NOT NULL,
-	"price" numeric NOT NULL CONSTRAINT positive_price CHECK (price > 0),
+	"price" real NOT NULL CONSTRAINT positive_price CHECK (price > 0),
 	CONSTRAINT "products_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
