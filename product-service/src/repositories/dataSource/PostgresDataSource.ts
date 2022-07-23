@@ -27,26 +27,32 @@ export class PostgresDataSource implements DataSource {
 	}
 
 	async interactWithinConnection<T>(callback: () => T) {
-		await this.client.connect();
+		let result: T;
 
-		const result = await callback();
+		try {
+			await this.client.connect();
+			result = await callback();
+		} finally {
+			await this.client.end();
+		}
 
-		await this.client.end();
-
-		return result
+		return result;
 	}
 
 	async interactWithinTransaction<T>(callback: () => T) {
 		return this.interactWithinConnection(async () => {
+			let result: T;
+
 			try {
 				await this.client.query('BEGIN');
-				const res = await callback()
+				result = await callback()
 				await this.client.query('COMMIT')
-				return res
 			} catch (error) {
 				await this.client.query('ROLLBACK')
 				throw error
 			}
+
+			return result;
 		})
 	}
 }
