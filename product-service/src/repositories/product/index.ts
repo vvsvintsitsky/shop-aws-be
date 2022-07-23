@@ -1,11 +1,12 @@
 import { ProductRepository } from './types';
-import { MockProductRepository } from './MockProductRepository';
+import { DatabaseProductRepository } from './DatabaseProductRepository';
+import { getDataSource } from '@repositories/dataSource';
 
 let productRepository: ProductRepository;
 
 export function getProductRepository(): ProductRepository {
     if (!productRepository) {
-        productRepository = new MockProductRepository();
+        productRepository = new DatabaseProductRepository(getDataSource);
     }
 
     return productRepository

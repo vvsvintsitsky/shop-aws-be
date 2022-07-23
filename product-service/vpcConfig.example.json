@@ -1,0 +1,4 @@
+{
+	"SUBNET_IDS": ["subnet-id"],
+	"SECURITY_GROUP_IDS": ["security-group-id"]
+}
