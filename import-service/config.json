@@ -1,6 +1,6 @@
 {
     "BUCKET_NAME": "shop-aws-be-vvs-import-produts-from-csv",
     "REGION": "us-east-1",
-    "UPLOAD_FOLDER_NAME": "upload",
+    "UPLOAD_FOLDER_NAME": "uploaded",
     "EXPIRATION_TIME": 60
 }
