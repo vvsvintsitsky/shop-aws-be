@@ -20,7 +20,7 @@ export function createHandler({
 		typeof schema
 	> = async (event) => {
 		try {
-			const fileName = event.queryStringParameters.filename;
+			const fileName = event.queryStringParameters.name;
 
 			const s3Instance = getS3Instance();
 
