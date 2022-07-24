@@ -16,20 +16,11 @@ export function createHandler({
 }) {
 	const createUrlForImport = async (event: S3Event) => {
 		try {
-			console.log("START");
-
 			const s3Instance = getS3Instance();
 
 			const fileRecords = event.Records.filter(
 				(record) => !!record.s3.object.size
 			);
-
-			console.log(`
-				START\n
-				${JSON.stringify(event.Records)}
-				\n
-				${JSON.stringify(fileRecords)}
-			`);
 
 			for (const record of fileRecords) {
 				const {
@@ -63,7 +54,7 @@ export function createHandler({
 								JSON.stringify({
 									Bucket: bucketName,
 									Key: objectKey,
-									ParsedRows: data,
+									ParsedRow: data,
 								})
 							);
 						})
@@ -86,16 +77,11 @@ export function createHandler({
 					.promise();
 			}
 
-			console.log(`
-				END\n
-			`);
-
 			return formatJSONResponse(
 				{
 					message: "Files were successfully moved",
 				},
 				202,
-				""
 			);
 		} catch (error) {
 			console.log(`
