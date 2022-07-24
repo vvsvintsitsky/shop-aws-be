@@ -1,4 +1,5 @@
 import { S3 } from "aws-sdk";
+import csvParser from "csv-parser";
 
 import { formatJSONResponse } from "@libs/api-gateway";
 
@@ -49,6 +50,26 @@ export function createHandler({
 					${JSON.stringify({ Bucket: bucketName, Key: objectKey })}
 					\n
 				`);
+
+				const objectReadStream = s3Instance
+					.getObject({ Bucket: bucketName, Key: objectKey })
+					.createReadStream();
+				const csvParsingStream = objectReadStream.pipe(csvParser());
+
+				await new Promise((resolve, reject) => {
+					csvParsingStream
+						.on("data", (data) => {
+							console.log(
+								JSON.stringify({
+									Bucket: bucketName,
+									Key: objectKey,
+									ParsedRows: data,
+								})
+							);
+						})
+						.on("end", resolve)
+						.on("error", reject);
+				});
 
 				await s3Instance
 					.copyObject(
