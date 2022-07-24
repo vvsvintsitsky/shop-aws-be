@@ -1,8 +1,11 @@
 import type { AWS } from "@serverless/typescript";
 
 import createUrlForImport from "@functions/createUrlForImport";
+import parseImportedFiles from "@functions/parseImportedFiles";
 
-import config from "./config.json";
+import { getConfig } from "@libs/getConfig";
+
+const config = getConfig();
 
 const serverlessConfiguration: AWS = {
 	service: "import-service",
@@ -23,7 +26,17 @@ const serverlessConfiguration: AWS = {
 		iamRoleStatements: [
 			{
 				Effect: "Allow",
-				Action: "S3:*",
+				Action: "s3:*",
+				Resource: {
+					"Fn::Join": [
+						"",
+						[{ "Fn::GetAtt": ["ImportedFilesBucket", "Arn"] }, ""],
+					],
+				},
+			},
+			{
+				Effect: "Allow",
+				Action: "s3:*",
 				Resource: {
 					"Fn::Join": [
 						"",
@@ -34,7 +47,7 @@ const serverlessConfiguration: AWS = {
 		],
 	},
 	// import the function via paths
-	functions: { createUrlForImport },
+	functions: { createUrlForImport, parseImportedFiles },
 	package: { individually: true },
 	custom: {
 		esbuild: {
@@ -60,12 +73,41 @@ const serverlessConfiguration: AWS = {
 								AllowedHeaders: ["*"],
 								AllowedMethods: ["PUT"],
 								AllowedOrigins: ["*"],
-								ExposeHeaders: [],
 							},
 						],
 					},
 				},
 			},
+			// ImportedFilesBucketPolicy: {
+			// 	Type: "AWS::S3::BucketPolicy",
+			// 	Properties: {
+			// 		Bucket: config.BUCKET_NAME,
+			// 		PolicyDocument: {
+			// 			Version: "2012-10-17",
+			// 			Statement: [
+			// 				{
+			// 					Effect: "Allow",
+			// 					Action: "S3:*",
+			// 					Principal: "*",
+			// 					Resource: [
+			// 						{
+			// 							"Fn::Join": [
+			// 								"",
+			// 								[{ "Fn::GetAtt": ["ImportedFilesBucket", "Arn"] }, "/*"],
+			// 							],
+			// 						},
+			// 						{
+			// 							"Fn::Join": [
+			// 								"",
+			// 								[{ "Fn::GetAtt": ["ImportedFilesBucket", "Arn"] }, ""],
+			// 							],
+			// 						},
+			// 					],
+			// 				},
+			// 			],
+			// 		},
+			// 	},
+			// },
 		},
 	},
 };
