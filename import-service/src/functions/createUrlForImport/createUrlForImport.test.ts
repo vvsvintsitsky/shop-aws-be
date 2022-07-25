@@ -7,7 +7,7 @@ import { ValidatedAPIGatewayProxyEvent } from "@libs/api-gateway";
 
 import { createHandler } from "./createHandler";
 
-describe("getProductsList", () => {
+describe("createUrlForImport", () => {
 	const bucketName = "bname";
 	const uploadFolderName = "ufname";
 	const expiresIn = 10;
