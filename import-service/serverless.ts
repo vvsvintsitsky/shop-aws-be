@@ -78,36 +78,6 @@ const serverlessConfiguration: AWS = {
 					},
 				},
 			},
-			// ImportedFilesBucketPolicy: {
-			// 	Type: "AWS::S3::BucketPolicy",
-			// 	Properties: {
-			// 		Bucket: config.BUCKET_NAME,
-			// 		PolicyDocument: {
-			// 			Version: "2012-10-17",
-			// 			Statement: [
-			// 				{
-			// 					Effect: "Allow",
-			// 					Action: "S3:*",
-			// 					Principal: "*",
-			// 					Resource: [
-			// 						{
-			// 							"Fn::Join": [
-			// 								"",
-			// 								[{ "Fn::GetAtt": ["ImportedFilesBucket", "Arn"] }, "/*"],
-			// 							],
-			// 						},
-			// 						{
-			// 							"Fn::Join": [
-			// 								"",
-			// 								[{ "Fn::GetAtt": ["ImportedFilesBucket", "Arn"] }, ""],
-			// 							],
-			// 						},
-			// 					],
-			// 				},
-			// 			],
-			// 		},
-			// 	},
-			// },
 		},
 	},
 };

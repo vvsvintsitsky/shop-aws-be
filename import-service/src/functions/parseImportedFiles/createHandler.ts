@@ -61,20 +61,6 @@ export function createHandler({
 						.on("end", resolve)
 						.on("error", reject);
 				});
-
-				await s3Instance
-					.copyObject(
-						{
-							Bucket: bucketName,
-							CopySource: objectKey,
-							Key: objectKey.replace(uploadFolderName, parsedForlderName),
-						},
-						() => {}
-					)
-					.promise();
-				await s3Instance
-					.deleteObject({ Bucket: bucketName, Key: objectKey })
-					.promise();
 			}
 
 			return formatJSONResponse(
