@@ -10,15 +10,14 @@ export class DatabaseProductRepository implements ProductRepository {
 		"SELECT id, title, description, price, count from products p LEFT JOIN stocks s ON p.id = s.product_id";
 
 	async getById(productId: string): Promise<Product> {
-        const dataSource = this.createDataSource();
+		const dataSource = this.createDataSource();
 
-		const { rowCount, rows } = await dataSource.interactWithinConnection(
-			() =>
-				dataSource.query<Product, [string]>({
-					name: "get-product-by-id",
-					text: `${DatabaseProductRepository.SELECT_PRODUCT_QUERY} WHERE p.id = $1`,
-					values: [productId],
-				})
+		const { rowCount, rows } = await dataSource.interactWithinConnection(() =>
+			dataSource.query<Product, [string]>({
+				name: "get-product-by-id",
+				text: `${DatabaseProductRepository.SELECT_PRODUCT_QUERY} WHERE p.id = $1`,
+				values: [productId],
+			})
 		);
 
 		if (!rowCount) {
@@ -31,7 +30,7 @@ export class DatabaseProductRepository implements ProductRepository {
 	}
 
 	async getAll(): Promise<Product[]> {
-        const dataSource = this.createDataSource();
+		const dataSource = this.createDataSource();
 
 		const { rows } = await dataSource.interactWithinConnection(() =>
 			dataSource.query<Product, [string]>({
@@ -44,7 +43,7 @@ export class DatabaseProductRepository implements ProductRepository {
 	}
 
 	async create(product: Product): Promise<Product> {
-        const dataSource = this.createDataSource();
+		const dataSource = this.createDataSource();
 
 		return dataSource.interactWithinTransaction(async () => {
 			await dataSource.query<{}, [string, string, string, number]>({
@@ -60,6 +59,39 @@ export class DatabaseProductRepository implements ProductRepository {
 			});
 
 			return product;
+		});
+	}
+
+	async createBatch(products: Product[]): Promise<void> {
+		const dataSource = this.createDataSource();
+
+		const productsBatchValues = dataSource.prepareBatchValues(
+			products,
+			(product) => [
+				product.id,
+				product.title,
+				product.description,
+				product.price,
+			]
+		);
+
+		const stocksBatchValues = dataSource.prepareBatchValues(products, (product) => [
+			product.id,
+			product.count,
+		])
+
+		return dataSource.interactWithinTransaction(async () => {
+			await dataSource.query<{}, (string | number)[]>({
+				name: "create-products-batch",
+				text: `INSERT INTO products (id, title, description, price) VALUES ${productsBatchValues.valuesTemplate}`,
+				values: productsBatchValues.queryValues,
+			});
+
+			await dataSource.query<{}, (string | number)[]>({
+				name: "create-stocks-batch",
+				text: `INSERT INTO stocks (product_id, count) VALUES ${stocksBatchValues.valuesTemplate}`,
+				values: stocksBatchValues.queryValues,
+			});
 		});
 	}
 }

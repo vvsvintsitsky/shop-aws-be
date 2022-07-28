@@ -44,15 +44,35 @@ export class PostgresDataSource implements DataSource {
 			let result: T;
 
 			try {
-				await this.client.query('BEGIN');
-				result = await callback()
-				await this.client.query('COMMIT')
+				await this.client.query("BEGIN");
+				result = await callback();
+				await this.client.query("COMMIT");
 			} catch (error) {
-				await this.client.query('ROLLBACK')
-				throw error
+				await this.client.query("ROLLBACK");
+				throw error;
 			}
 
 			return result;
-		})
+		});
+	}
+
+	public prepareBatchValues<T extends Record<string, V>, V>(
+		values: T[],
+		mapValueToArray: (value: T) => V[]
+	) {
+		const mappedValues = values.map(mapValueToArray);
+
+		return {
+			queryValues: mappedValues.flat(),
+			valuesTemplate: mappedValues
+				.map(({ length }, itemIndex) => {
+					const startIndex = itemIndex * length;
+					return `(${Array.from(
+						{ length },
+						(_, index) => `$${startIndex + index + 1}`
+					).join(",")})`;
+				})
+				.join(","),
+		};
 	}
 }

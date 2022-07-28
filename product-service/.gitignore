@@ -14,3 +14,6 @@ envConfig.json
 envConfig.local.json
 
 vpcConfig.json
+
+sqsConfig.json
+snsConfig.json

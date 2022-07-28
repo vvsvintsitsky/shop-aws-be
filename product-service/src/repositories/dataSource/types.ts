@@ -17,9 +17,9 @@ export interface QueryResult<T extends QueryResultRow> {
 }
 
 export interface QueryConfig<I extends ReadonlyArray<any>> {
-    name?: string | undefined;
-    text: string;
-    values?: I | undefined;
+	name?: string | undefined;
+	text: string;
+	values?: I | undefined;
 }
 
 export interface DataSource {
@@ -29,4 +29,8 @@ export interface DataSource {
 	): Promise<QueryResult<T>>;
 	interactWithinConnection<T>(callback: () => T): Promise<T>;
 	interactWithinTransaction<T>(callback: () => T): Promise<T>;
+	prepareBatchValues<T extends Record<string, V>, V>(
+		values: T[],
+		mapValueToArray: (value: T) => V[],
+	): { queryValues: V[]; valuesTemplate: string };
 }
