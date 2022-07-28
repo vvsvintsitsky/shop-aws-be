@@ -27,33 +27,26 @@ export function createHandler({
 
 			await getProductRepository().createBatch(productsToCreate);
 
-			const message = JSON.stringify(productsToCreate);
-
-			getSns().publish(
-				{
+			await getSns()
+				.publish({
 					TopicArn: topicArn,
 					Subject: "Batch created",
 					Message: JSON.stringify(productsToCreate),
-				},
-				(error) => {
-					if (!error) {
-						logger.log({
-							message: `message successfully sent for batch: ${message}`,
-						});
-						return;
-					}
+				})
+				.promise();
 
-					logger.log({
-						error: `ERROR sending email: ${error.message}, ${JSON.stringify(
-							error
-						)}`,
-					});
-				}
-			);
+			return {
+				statusCode: 201,
+				body: "Products created",
+			};
 		} catch (error) {
 			getLogger().log({
 				message: `ERROR: ${error.message}, ${JSON.stringify(error)}`,
 			});
+			return {
+				statusCode: 500,
+				body: error.message,
+			};
 		}
 	};
 

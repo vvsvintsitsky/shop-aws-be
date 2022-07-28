@@ -7,7 +7,7 @@ import swagger from "@functions/swagger";
 import catalogBatchProcess from "@functions/catalogBatchProcess";
 
 import envConfig from "./envConfig.json";
-import vpcConfig from "./vpcConfig.json";
+// import vpcConfig from "./vpcConfig.json";
 import sqsConfig from "./sqsConfig.json";
 import snsConfig from "./snsConfig.json";
 
@@ -32,10 +32,10 @@ const serverlessConfiguration: AWS = {
 			REGION: region,
 			...envConfig,
 		},
-		vpc: {
-			subnetIds: vpcConfig.SUBNET_IDS,
-			securityGroupIds: vpcConfig.SECURITY_GROUP_IDS,
-		},
+		// vpc: {
+		// 	subnetIds: vpcConfig.SUBNET_IDS,
+		// 	securityGroupIds: vpcConfig.SECURITY_GROUP_IDS,
+		// },
 		iamRoleStatements: [
 			{
 				Effect: "Allow",
