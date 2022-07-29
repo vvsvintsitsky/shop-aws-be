@@ -41,6 +41,8 @@ export function createHandler({
 
 			console.log(`START Product parsing ${JSON.stringify(event)}`);
 
+			console.log(`START Product parsing ${JSON.stringify(event)}`);
+
 			const fileRecords = event.Records.filter(
 				(record) => !!record.s3.object.size
 			);
