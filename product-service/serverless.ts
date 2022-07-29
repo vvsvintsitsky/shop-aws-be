@@ -122,13 +122,13 @@ const serverlessConfiguration: AWS = {
 			CatalogBatchSimpleQueueUrl: {
 				Value: { Ref: "CatalogBatchSimpleQueue" },
 				Export: {
-					Name: "CatalogBatchSimpleQueueUrl",
+					Name: { "Fn::Sub": "${AWS::StackName}-CatalogBatchSimpleQueue" },
 				},
 			},
 			CatalogBatchSimpleQueueArn: {
 				Value: { "Fn::GetAtt": ["CatalogBatchSimpleQueue", "Arn"] },
 				Export: {
-					Name: "CatalogBatchSimpleQueueArn",
+					Name: { "Fn::Sub": "${AWS::StackName}-CatalogBatchSimpleQueueArn" },
 				},
 			},
 		},
