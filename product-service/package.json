@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "serverless": "serverless",
-    "serverless:deploy": "serverless deploy",
-    "serverless:remove": "serverless remove",
+    "serverless:deploy:dev": "serverless deploy --stage dev",
+    "serverless:remove:dev": "serverless remove --stage dev",
     "local:build": "docker-compose build",
     "local:up": "docker-compose up",
     "local:stop": "docker-compose stop",
@@ -21,6 +21,7 @@
   "dependencies": {
     "@middy/core": "^2.5.3",
     "@middy/http-json-body-parser": "^2.5.3",
+    "aws-sdk": "^2.1183.0",
     "pg": "^8.7.3"
   },
   "devDependencies": {

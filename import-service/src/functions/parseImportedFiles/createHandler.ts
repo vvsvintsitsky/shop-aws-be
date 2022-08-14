@@ -1,4 +1,4 @@
-import { S3 } from "aws-sdk";
+import { S3, SQS } from "aws-sdk";
 import csvParser from "csv-parser";
 
 import { formatJSONResponse } from "@libs/api-gateway";
@@ -25,10 +25,21 @@ function processRecordsFromStream(
 	});
 }
 
-export function createHandler({ getS3Instance }: { getS3Instance: () => S3 }) {
+export function createHandler({
+	getS3Instance,
+	getSQSInstance,
+	queueUrl,
+}: {
+	getS3Instance: () => S3;
+	getSQSInstance: () => SQS;
+	queueUrl: string;
+}) {
 	const createUrlForImport = async (event: S3Event) => {
 		try {
 			const s3Instance = getS3Instance();
+			const sqsIntance = getSQSInstance();
+
+			console.log(`START Product parsing ${JSON.stringify(event)}`);
 
 			console.log(`START Product parsing ${JSON.stringify(event)}`);
 
@@ -51,7 +62,12 @@ export function createHandler({ getS3Instance }: { getS3Instance: () => S3 }) {
 					return processRecordsFromStream(
 						productParsingStream,
 						async (product) => {
-							console.log(`Parsed product: ${JSON.stringify(product)}`);
+							await sqsIntance
+								.sendMessage({
+									QueueUrl: queueUrl,
+									MessageBody: JSON.stringify(product),
+								})
+								.promise();
 						}
 					);
 				}
