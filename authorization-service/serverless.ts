@@ -2,6 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import basicAuthorizer from '@functions/basic-authorizer';
 
+import authConfig from './authConfig.json';
+
 const serverlessConfiguration: AWS = {
   service: 'authorization-service',
   frameworkVersion: '3',
@@ -16,6 +18,8 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      USERNAME: authConfig.username,
+      PASSWORD: authConfig.password,
     },
   },
   // import the function via paths
@@ -37,7 +41,7 @@ const serverlessConfiguration: AWS = {
     Outputs: {
 			BasicAuthorizerFunctionArn: {
         Description: 'Basic authorizer ARN',
-				Value: "!GetAtt BasicAuthorizerFunction.Arn",
+				Value: { "Fn::GetAtt": ["BasicAuthorizerLambdaFunction", "Arn"] },
 				Export: {
           Name: { "Fn::Sub": "${AWS::StackName}-BasicAuthorizerArn" },
         }

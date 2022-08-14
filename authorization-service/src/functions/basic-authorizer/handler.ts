@@ -2,7 +2,7 @@ import { APIGatewayAuthorizerEvent } from "aws-lambda";
 
 function generatePolicy(principalId: string, effect: string, resource: string) {
 	return {
-    principalId,
+		principalId,
 		policyDocument: {
 			Version: "2012-10-17",
 			Statement: [
@@ -16,24 +16,30 @@ function generatePolicy(principalId: string, effect: string, resource: string) {
 	};
 }
 
-function basicAuthorizer(event: APIGatewayAuthorizerEvent) {
+async function basicAuthorizer(event: APIGatewayAuthorizerEvent) {
 	console.log(event);
 
-  if (event.type !== 'TOKEN') {
-    throw new Error('Expected "event.type" parameter to have value "TOKEN"');
-  }
+	if (event.type !== "TOKEN") {
+		throw new Error('Expected "event.type" parameter to have value "TOKEN"');
+	}
 
-	const { authorizationToken, methodArn } = event;
+	const { authorizationToken = "", methodArn } = event;
 
-	if (!authorizationToken) {
+	const authorizationTokenValue = authorizationToken.split("Bearer ")[1];
+
+	if (!authorizationTokenValue) {
 		throw "Unauthorized";
 	}
 
-	if (authorizationToken !== "aaa") {
-		return generatePolicy("user", "Deny", methodArn);
+	const [username, password] = Buffer.from(authorizationTokenValue, "base64")
+		.toString("utf-8")
+		.split(":");
+
+	if (username !== process.env.USERNAME || password !== process.env.PASSWORD) {
+		return generatePolicy(authorizationTokenValue, "Deny", methodArn);
 	}
 
-	return generatePolicy("user", "Allow", methodArn);
+	return generatePolicy(authorizationTokenValue, "Allow", methodArn);
 }
 
 export const main = basicAuthorizer;
