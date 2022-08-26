@@ -1,3 +1,4 @@
+
 import { handlerPath } from '@libs/handler-resolver';
 
 export default {
@@ -8,6 +9,15 @@ export default {
         method: 'get',
         path: '/import',
         cors: true,
+        authorizer: {
+          name: 'basicAuthorizer',
+          arn: {
+            "Fn::ImportValue": "authorization-service-${opt:stage}-BasicAuthorizerArn",
+          },
+          resultTtlInSeconds: 0,
+          identitySource: 'method.request.header.Authorization',
+          type: 'token',
+        },
       },
     },
   ],
